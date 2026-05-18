@@ -1545,9 +1545,18 @@ def run(session, options):
     print(f"\n{YELLOW}[*] Starting listener on {lhost}:{lport}...{RESET}")
     
     listener = ReverseTCPListener(lhost, lport, auto_handle)
-    #listener.gui_mode = True
     # Auto-detect: GUI kalau session punya 'gui_instance', CLI kalau tidak
     listener.gui_mode = isinstance(session, dict) and session.get('gui_instance') is not None
+
+    # Daftarkan listener ke module_runner agar bisa dihentikan saat stop() dipanggil
+    if isinstance(session, dict):
+        gui_instance = session.get('gui_instance')
+        if gui_instance and hasattr(gui_instance, 'module_runner') and gui_instance.module_runner:
+            gui_instance.module_runner.register_listener(listener)
+        # Simpan juga di gui_instance untuk closeEvent
+        if gui_instance and hasattr(gui_instance, 'reverse_listener'):
+            gui_instance.reverse_listener = listener
+
     try:
         listener.start()
     except KeyboardInterrupt:
